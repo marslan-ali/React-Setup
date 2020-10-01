@@ -1,91 +1,97 @@
 import React from "react";
-import { ErrorMessage, useFormik } from "formik";
 import "../Vendors/fontawesome/css/font-awesome.min.css";
 import "../Vendors/css/nprogress.css";
 import "../Vendors/css/animate.min.css";
 import '../Vendors//css/bootstrap.min.css';
 import "../Vendors/css/custom.min.css";
+import { ErrorMessage, useFormik } from "formik";
 
+import {Link, Redirect} from "react-router-dom";
 import axios from "axios";
-import {Redirect} from 'react-router-dom';
 
 
-function Login() {
-  const Register = useFormik({
-    initialValues:{
-      email: "",
-      password: "",
-      dob:"",
-      name:"",
-    },
-    onSubmit : (values)=>{
-      console.log(values);
-      axios.post('http://localhost:3001/API/user/new', {
-        name:values.name,
-        dob:values.dob,
-        email:values.email,
-        password:values.password,
-      })
-      .then((response) => {
-        console.log(response);
-      }, (error) => {
-        console.log(error);
-      });
-    },
-    validate: (values) => {
-      let errors = {};
-      if (!values.email) {
-        errors.email = "Email is Required";
-      }
-      if (!values.password) {
-        errors.password = "Password is Required";
-      }
-      if (!values.dob) {
-        errors.dob = "Date Of Birth is Required";
-      }
-      if (!values.name) {
-        errors.name = "Name is Required";
-      }
-      return errors;
+
+
+function User() {
+ 
+const Register = useFormik({
+  initialValues:{
+    email: "",
+    password: "",
+    dob:"",
+    name:"",
+  },
+  onSubmit : (values)=>{
+    console.log(values);
+    axios.post('http://localhost:3001/API/user/new', {
+      name:values.name,
+      dob:values.dob,
+      email:values.email,
+      password:values.password,
+    })
+    .then((response) => {
+      console.log(response);
+      alert(response.data.message);
+    }, (error) => {
+      console.log(error);
+    });
+  },
+  validate: (values) => {
+    let errors = {};
+    if (!values.email) {
+      errors.email = "Email is Required";
     }
-  });
-
-  const Login = useFormik({
-    initialValues:{
-      email: "",
-      password: "",
-     
-    },
-    onSubmit : (values)=>{
-      console.log(values);
-      axios.post('http://localhost:3001/API/Login', {
-       
-        email:values.email,
-        password:values.password,
-      })
-      .then((response) => {
-      
-
-        console.log(response);
-      }, (error) => {
-        console.log(error);
-      });
-    },
-    validate: (values) => {
-      let errors = {};
-      if (!values.email) {
-        errors.email = "Email is Required";
-      }
-      if (!values.password) {
-        errors.password = "Password is Required";
-      }
-     
-      return errors;
+    if (!values.password) {
+      errors.password = "Password is Required";
     }
-  });
+    if (!values.dob) {
+      errors.dob = "DOB is Required";
+    }
+    if (!values.name) {
+      errors.name = "Name is Required";
+    }
+    return errors;
+  }
+});
 
+const Login = useFormik({
+  initialValues:{
+    email: "",
+    password: "",
+   
+  },
+  onSubmit : (values)=>{
+    console.log(values);
+    axios.post('http://localhost:3001/API/Login', {
+     
+      email:values.email,
+      password:values.password,
+    })
+    .then((response) => {
+    
+      alert(response.data.message);
+      console.log(response);
+    }, (error) => {
+      console.log(error);
+    });
+  },
+  validate: (values) => {
+    let errors = {};
+    if (!values.email) {
+      errors.email = "Email is Required";
+    }
+    if (!values.password) {
+      errors.password = "Password is Required";
+    }
+   
+    return errors;
+  }
   
+});
+
+
   return (
+    
     <div class="login">
       <div>
         <a class="hiddenanchor" id="signup"></a>
@@ -144,9 +150,8 @@ function Login() {
                     Log in
                   </button> 
                   
-                  <a class="reset_pass" href="#">
-                    Lost your password?
-                  </a>
+                  <Link  class="reset_pass"  to="/API/user/resetLink">Lost Your Password?</Link>
+                
                 </div>
 
                 <div class="clearfix"></div>
@@ -269,4 +274,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default User;
