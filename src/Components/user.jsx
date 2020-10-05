@@ -1,97 +1,103 @@
-import React from "react";
+import React, { useState } from "react";
+
 import "../Vendors/fontawesome/css/font-awesome.min.css";
 import "../Vendors/css/nprogress.css";
 import "../Vendors/css/animate.min.css";
-import '../Vendors//css/bootstrap.min.css';
+import "../Vendors//css/bootstrap.min.css";
 import "../Vendors/css/custom.min.css";
-import { ErrorMessage, useFormik } from "formik";
+import {  useFormik } from "formik";
 
-import {Link, Redirect} from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 
-
-
-
 function User() {
- 
-const Register = useFormik({
-  initialValues:{
-    email: "",
-    password: "",
-    dob:"",
-    name:"",
-  },
-  onSubmit : (values)=>{
-    console.log(values);
-    axios.post('http://localhost:3001/API/user/new', {
-      name:values.name,
-      dob:values.dob,
-      email:values.email,
-      password:values.password,
-    })
-    .then((response) => {
-      console.log(response);
-      alert(response.data.message);
-    }, (error) => {
-      console.log(error);
-    });
-  },
-  validate: (values) => {
-    let errors = {};
-    if (!values.email) {
-      errors.email = "Email is Required";
-    }
-    if (!values.password) {
-      errors.password = "Password is Required";
-    }
-    if (!values.dob) {
-      errors.dob = "DOB is Required";
-    }
-    if (!values.name) {
-      errors.name = "Name is Required";
-    }
-    return errors;
-  }
-});
+  const [redirect, setRedirect] = useState(false);
+  const Register = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+      dob: "",
+      name: "",
+    },
+    onSubmit: (values) => {
+      console.log(values);
+      axios
+        .post("http://localhost:3001/API/user/new", {
+          name: values.name,
+          dob: values.dob,
+          email: values.email,
+          password: values.password,
+        })
+        .then(
+          (response) => {
+            console.log(response);
+            alert(response.data.message);
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+    },
+    validate: (values) => {
+      let errors = {};
+      if (!values.email) {
+        errors.email = "Email is Required";
+      }
+      if (!values.password) {
+        errors.password = "Password is Required";
+      }
+      if (!values.dob) {
+        errors.dob = "DOB is Required";
+      }
+      if (!values.name) {
+        errors.name = "Name is Required";
+      }
+      return errors;
+    },
+  });
 
-const Login = useFormik({
-  initialValues:{
-    email: "",
-    password: "",
-   
-  },
-  onSubmit : (values)=>{
-    console.log(values);
-    axios.post('http://localhost:3001/API/Login', {
-     
-      email:values.email,
-      password:values.password,
-    })
-    .then((response) => {
-    
-      alert(response.data.message);
-      console.log(response);
-    }, (error) => {
-      console.log(error);
-    });
-  },
-  validate: (values) => {
-    let errors = {};
-    if (!values.email) {
-      errors.email = "Email is Required";
-    }
-    if (!values.password) {
-      errors.password = "Password is Required";
-    }
-   
-    return errors;
-  }
-  
-});
+  const Login = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    onSubmit: (values) => {
+      console.log(values);
+      axios
+        .post("http://localhost:3001/API/Login", {
+          email: values.email,
+          password: values.password,
+        })
+        .then(
+          (response) => {
+            setRedirect(true);
+            // alert(response.data.message);
+            console.log(response);
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+    },
+    validate: (values) => {
+      let errors = {};
+      if (!values.email) {
+        errors.email = "Email is Required";
+      }
+      if (!values.password) {
+        errors.password = "Password is Required";
+      }
 
+      return errors;
+    },
+  });
+
+  if(redirect===true){
+  return <Redirect to="/home"></Redirect>
+
+}
 
   return (
-    
     <div class="login">
       <div>
         <a class="hiddenanchor" id="signup"></a>
@@ -102,23 +108,25 @@ const Login = useFormik({
             <section class="login_content">
               <form onSubmit={Login.handleSubmit}>
                 <h1>Login Form</h1>
-                <div>
+                
+                <div class="col-md-12 col-sm-12  form-group has-feedback">
                   <input
-                    type="text"
+                   
+                   type="text"
                     class="form-control"
                     placeholder="Email"
                     name="email"
                     required=""
                     onChange={Login.handleChange}
                     value={Login.values.email}
-                  />
+                  ></input>
+											<span class="fa fa-envelope form-control-feedback right" aria-hidden="true"></span>
+
                   {Login.errors.email ? (
-                    <div style={{ paddingBottom: 5 }}>
-                      {Login.errors.email}
-                    </div>
+                    <div style={{ paddingBottom: 5 }}>{Login.errors.email}</div>
                   ) : null}
                 </div>
-                <div>
+                <div class="col-md-12 col-sm-12  form-group has-feedback">
                   <input
                     type="password"
                     class="form-control"
@@ -128,6 +136,8 @@ const Login = useFormik({
                     onChange={Login.handleChange}
                     value={Login.values.password}
                   />
+											<span class="fa fa-lock form-control-feedback right" aria-hidden="true"></span>
+
                   {Login.errors.password ? (
                     <div style={{ paddingBottom: 10 }}>
                       {Login.errors.password}
@@ -135,23 +145,23 @@ const Login = useFormik({
                   ) : null}
                 </div>
                 <div>
-                
-                {/* <button
+                  {/* <button
                   type="reset"
                     style={{ color: "whitesmoke" }}
                     class="btn btn-primary submit"
                   >
                    Reset
                   </button> */}
-                    <button
+                  <button
                     style={{ color: "whitesmoke" }}
                     class="btn btn-success submit"
                   >
                     Log in
-                  </button> 
-                  
-                  <Link  class="reset_pass"  to="/API/user/resetLink">Lost Your Password?</Link>
-                
+                  </button>
+
+                  <Link class="reset_pass" to="/API/user/resetLink">
+                    Lost Your Password?
+                  </Link>
                 </div>
 
                 <div class="clearfix"></div>
@@ -160,8 +170,8 @@ const Login = useFormik({
                   <p class="change_link">
                     New to site?
                     <a href="#signup" class="to_register">
-                      {" "}
-                      Create Account{" "}
+                     
+                      Create Account
                     </a>
                   </p>
 
@@ -176,7 +186,7 @@ const Login = useFormik({
             <section class="login_content">
               <form onSubmit={Register.handleSubmit}>
                 <h1>Create Account</h1>
-                <div>
+                <div class="col-md-12 col-sm-12  form-group has-feedback">
                   <input
                     type="text"
                     class=" field item form-group form-control"
@@ -186,13 +196,15 @@ const Login = useFormik({
                     onChange={Register.handleChange}
                     value={Register.values.name}
                   />
+											<span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
+
                   {Register.errors.name ? (
                     <div style={{ paddingBottom: 10 }}>
                       {Register.errors.name}
                     </div>
                   ) : null}
                 </div>
-                <div>
+                <div class="col-md-12 col-sm-12  form-group has-feedback">
                   <input
                     type="email"
                     class="field item  form-group form-control"
@@ -202,32 +214,34 @@ const Login = useFormik({
                     onChange={Register.handleChange}
                     value={Register.values.email}
                   />
-                  {Register.errors.email? (
+											<span class="fa fa-envelope form-control-feedback right" aria-hidden="true"></span>
+
+                  {Register.errors.email ? (
                     <div style={{ paddingBottom: 10 }}>
                       {Register.errors.email}
                     </div>
                   ) : null}
                 </div>
-                
-                  <div>
-                    <input
-                      class=" field item form-group form-control"
-                      type="date"
-                      name="dob"
-                      required="required"
-                      name="dob"
-                      onChange={Register.handleChange}
-                      value={Register.values.dob}
-                    />
-                    {Register.errors.dob ? (
+
+                <div class="col-md-12 col-sm-12  form-group has-feedback">
+                  <input
+                    class=" field item form-group form-control"
+                    type="date"
+                    name="dob"
+                    required="required"
+                    name="dob"
+                    onChange={Register.handleChange}
+                    value={Register.values.dob}
+                  />
+                  
+                  {Register.errors.dob ? (
                     <div style={{ paddingBottom: 10 }}>
                       {Register.errors.dob}
                     </div>
                   ) : null}
-                  </div>
-              
+                </div>
 
-                <div>
+                <div class="col-md-12 col-sm-12  form-group has-feedback">
                   <input
                     type="password"
                     class=" field item form-group form-control"
@@ -237,6 +251,8 @@ const Login = useFormik({
                     onChange={Register.handleChange}
                     value={Register.values.password}
                   />
+											<span class="fa fa-lock form-control-feedback right" aria-hidden="true"></span>
+
                   {Register.errors.password ? (
                     <div style={{ paddingBottom: 10 }}>
                       {Register.errors.password}
@@ -245,10 +261,7 @@ const Login = useFormik({
                 </div>
 
                 <div>
-                   
-                  <button  class="btn btn-success submit" >
-                    Submit
-                  </button>
+                  <button class="btn btn-success submit">Submit</button>
                 </div>
 
                 <div class="clearfix"></div>
@@ -257,8 +270,8 @@ const Login = useFormik({
                   <p class="change_link">
                     Already a member ?
                     <a href="#signin" class="to_register">
-                      {" "}
-                      Log in{" "}
+                     
+                      Log in
                     </a>
                   </p>
 

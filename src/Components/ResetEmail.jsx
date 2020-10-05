@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React from "react";
 import {  useFormik } from "formik";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 function ResetEmail() {
   
@@ -11,7 +11,6 @@ function ResetEmail() {
       email: "",
     },
     onSubmit : (values)=>{
-      console.log(values);
       axios.post('http://localhost:3001/API/user/resetLink', {
         email:values.email,
       })
@@ -38,16 +37,20 @@ function ResetEmail() {
       <div class="container padding-bottom-3x mb-2 mt-5">
         <div class="row justify-content-center">
           <div class="col-lg-5 col-md-10">
-            <div class="forgot">
+            <div class="forgot " style={{textAlign:"center"}}>
               <h2>Forgot Your Password?</h2>
             </div>
             <form class="card mt-4" onSubmit={resetEmail.handleSubmit}>
+           
+
+
               <div class="card-body">
-                <div class="form-group">
-                  {" "}
-                  <label for="email-for-pass" style={{ fontSize: 18 }}>
+              <label  class="col-md-12 col-sm-12" for="email-for-pass" style={{ fontSize: 18 }}>
                     Enter Your Email Address
-                  </label>{" "}
+                  </label>
+                <div class="col-md-12 col-sm-12  form-group has-feedback" >
+                
+                  
                   <input
                     class="form-control"
                     type="text"
@@ -57,6 +60,8 @@ function ResetEmail() {
                     onChange={resetEmail.handleChange}
                     value={resetEmail.values.email}
                   />
+											<span class="fa fa-envelope form-control-feedback right" aria-hidden="true"></span>
+
                    {resetEmail.errors.email ? (
                     <div style={{ paddingBottom: 5 }}>
                       {resetEmail.errors.email}
